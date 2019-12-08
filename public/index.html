@@ -1,58 +1,76 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Scraping With Mongoose</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link>
-    <style>
-      body { background-color: #F2F6D0 }
-      #wrapper {
-        width: 960px;
-        margin-left: auto;
-        margin-right: auto;
-        padding-top: 5%;
-      }
-      #articles {
-        display: inline-block;
-        overflow: auto;
-        width: 60%;
-        height: 700px;
-      }
-      #notes {
-        float: right;
-        width: 30%;
-      }
-      textarea, input {
-        display: block;
-        width: 100%;
-        background-color: #FCF5C7;
-      }
-      input {
-        height: 36px;
-        font-size: 24px;
-      }
-      textarea {
-        height: 200px;
-        font-size: 18px;
-      }
-      li:nth-child(2n+1) {
-        background-color:#ef5151;
-      }
-      li:nth-child(2n) {
-        background-color:#807676;
-      }
-    </style>
 
-  </head>
-  <body>
-    <div id="wrapper">
-      <h1>Note Scraper</h1>
-      <button id="scrape">SCRAPE!</button>
-      <div id="articles"></div>
-      <div id="notes"></div>
+<head>
+  <meta charset="UTF-8">
+  <title>Scraping With Mongoose</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link>
+  <style>
+    body {
+      background-color: #F2F6D0
+    }
+
+    #wrapper {
+      margin-left: auto;
+      margin-right: auto;
+      padding: 5%;
+    }
+
+    #articles {
+      overflow: auto;
+    }
+
+    textarea,
+    input {
+      display: block;
+      width: 100%;
+      background-color: #FCF5C7;
+    }
+
+    input {
+      height: 36px;
+      font-size: 24px;
+    }
+
+    textarea {
+      height: 200px;
+      font-size: 18px;
+    }
+
+    li:nth-child(2n+1) {
+      background-color: #ef5151;
+    }
+
+    li:nth-child(2n) {
+      background-color: #807676;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <div clas="row">
+      <div class="jumbotron">
+        <h1 class="display-4">Mongo Scraper</h1>
+        <hr class="my-4">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button type="button" id="savedArticle" class="btn btn-secondary">saved articles</button>
+          <button type="button"  id="reScrape" class="btn btn-secondary">re-Scrape</button>
+          <button type="button" id="clearArticles" class="btn btn-secondary">clear</button>
+        </div>
+      </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="app.js"></script>
-  </body>
+    <div class="row">
+      <div id="wrapper">
+        <div id="articles"></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="app.js"></script>
+</body>
+
 </html>

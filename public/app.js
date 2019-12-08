@@ -1,79 +1,128 @@
 // Grab the articles as a json
-$.getJSON("/articles", function(data) {
+$.getJSON("/articles", function (data) {
   // For each one
   let newUl = $("<ul>").addClass("list-group")
-  
+
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    let newLi = $("<li>").addClass("list-group-item").attr("data-id",data[i]._id).html(data[i].title+ "<br/>" +data[i].link)
-    let newButton = $("<button>").addClass("btn btn-success float-right saveArticle").text("save").attr("data-id",data[i]._id);
+    let newLi = $("<li>").addClass("list-group-item").attr("data-id", data[i]._id).html(data[i].title + "<br/>" + data[i].link)
+    let newButton = $("<button>").addClass("btn btn-success float-right saveArticle").text("save").attr("data-id", data[i]._id);
     newLi.append(newButton)
     newUl.append(newLi);
-    
+
   }
   $("#articles").append(newUl);
 });
 
-
-// Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
-  // Empty the notes from the note section
-  $("#notes").empty();
-  // Save the id from the p tag
-  var thisId = $(this).attr("data-id");
-
-  // Now make an ajax call for the Article
+// Delete articles
+$("#clearArticles").click(() => {
   $.ajax({
     method: "GET",
-    url: "/articles/" + thisId
+    url: "/delArticles"
   })
-    // With that done, add the note information to the page
-    .then(function(data) {
-      console.log(data);
-      // The title of the article
-      $("#notes").append("<h2>" + data.title + "</h2>");
-      // An input to enter a new title
-      $("#notes").append("<input id='titleinput' name='title' >");
-      // A textarea to add a new note body
-      $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-      // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+  $("#articles").empty();
+})
 
-      // If there's a note in the article
-      if (data.note) {
-        // Place the title of the note in the title input
-        $("#titleinput").val(data.note.title);
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
+$(document).on("click", "#reScrape", function() {
+  // Grab the id associated with the article from the submit button
+  $.ajax({
+    method: "GET",
+    url: "/scrape",
+  }).then(() => {
+    // Grab the articles as a json
+    $.getJSON("/articles", function(data) {
+      $("#articles").empty();
+      // For each one
+      let newUl = $("<ul>").addClass("list-group");
+      for (var i = 0; i < data.length; i++) {
+        // Display the apropos information on the page
+        let newLi = $("<li>")
+          .addClass("list-group-item")
+          .attr("data-id", data[i]._id)
+          .html(data[i].title + "</br>" + data[i].link);
+        let newButton = $("<button>")
+          .addClass("saveArticle btn btn-outline-success float-right")
+          .text("save")
+          .attr("data-id", data[i]._id);
+        newLi.append(newButton);
+        newUl.append(newLi);
       }
+      $("#articles").append(newUl);
     });
+  });
+
 });
 
-// When you click the savenote button
-$(document).on("click", "#savenote", function() {
+
+$("#savedArticle").click(() => {
+  $("#articles").empty();
+  // Grab the articles as a json
+  $.getJSON("/savedArticles", function (data) {
+    // For each one
+    let newUl = $("<ul>").addClass("list-group")
+
+    for (var i = 0; i < data.length; i++) {
+      // Display the apropos information on the page
+      let newLi = $("<li>").addClass("list-group-item").attr("data-id", data[i]._id).html(data[i].title + "<br/>" + data[i].link)
+      let newButton = $("<button>").addClass("btn btn-danger float-right deleteArticle").text("X").attr("data-id", data[i]._id);
+      newLi.append(newButton)
+      newUl.append(newLi);
+
+    }
+    $("#articles").append(newUl);
+  })
+});
+
+$(document).on("click", ".saveArticle", function () {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
 
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
-    method: "POST",
-    url: "/articles/" + thisId,
-    data: {
-      // Value taken from title input
-      title: $("#titleinput").val(),
-      // Value taken from note textarea
-      body: $("#bodyinput").val()
-    }
+    method: "GET",
+    url: "/articles/" + thisId
   })
     // With that done
-    .then(function(data) {
-      // Log the response
+    .then(function (data) {
       console.log(data);
-      // Empty the notes section
-      $("#notes").empty();
+      $.ajax({
+        method: "POST",
+        url: "/savedArticles",
+        data: {
+          title: data.title,
+          link: data.link
+        }
+      })
     });
+});
 
-  // Also, remove the values entered in the input and textarea for note entry
-  $("#titleinput").val("");
-  $("#bodyinput").val("");
+$(document).on("click", ".deleteArticle", function() {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+  $.ajax({
+    method: "GET",
+    url: "/deleteArticle/" + thisId,
+  }).then(()=>{
+    $("#articles").empty();
+    // Grab the articles as a json
+    $.getJSON("/savedArticles", function(data) {
+      // For each one
+      let newUl = $("<ul>").addClass("list-group");
+  
+      for (var i = 0; i < data.length; i++) {
+        // Display the apropos information on the page
+        let newLi = $("<li>")
+          .addClass("list-group-item")
+          .attr("data-id", data[i]._id)
+          .html(data[i].title + "</br>" + data[i].link);
+        let newButton = $("<button>")
+          .addClass("deleteArticle btn btn-outline-success float-right")
+          .text("X")
+          .attr("data-id", data[i]._id);
+        newLi.append(newButton);
+        newUl.append(newLi);
+      }
+      $("#articles").append(newUl);
+    });
+  })
 });
