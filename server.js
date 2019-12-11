@@ -11,7 +11,7 @@ var cheerio = require("cheerio");
 // Require all models
 var db = require("./models");
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Initialize Express
 var app = express();
@@ -26,7 +26,7 @@ app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://user1:password1@ds353338.mlab.com:53338/heroku_czm19vmz";
+MONGODB_URI = process.env.MONGODB_URI || "mongodb://user:password1@ds353338.mlab.com:53338/heroku_czm19vmz";
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
@@ -77,7 +77,7 @@ app.get("/scrape", function(req, res) {
 app.get("/delArticles", function(req, res) {
   // Create a new note and pass the req.body to the entry
   // Create a new savedArticle using the 
-  db.Article.remove()
+  db.Article.remove({})
   .then(function(dbArticle) {
     // View the added result in the console
     console.log(dbArticle);
@@ -104,7 +104,7 @@ app.get("/articles", function(req, res) {
 
 
 app.post("/savedArticles", function(req, res) {
-  db.SavedArticle.create(req.body)
+  db.Saved.create(req.body)
   .then(function(dbArticle) {
     // View the added result in the console
     console.log(dbArticle);
@@ -133,7 +133,7 @@ app.get("/articles/:id", function(req, res) {
 // Route for getting all SavedArticles from the db
 app.get("/savedArticles", function(req, res) {
   // Grab every document in the Articles collection
-  db.SavedArticle.find({})
+  db.Saved.find({})
     .then(function(dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
@@ -146,7 +146,7 @@ app.get("/savedArticles", function(req, res) {
 
 app.get("/deleteArticle/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-  db.SavedArticle.remove({ _id: req.params.id })
+  db.Saved.remove({ _id: req.params.id })
     // ..and Remove all of the notes associated with it
     .then(function(dbArticle) {
       res.json(dbArticle);
