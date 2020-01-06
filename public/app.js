@@ -1,15 +1,20 @@
 // Grab the articles as a json
-$.getJSON("/articles", function (data) {
+$.getJSON("/articles", function(data) {
   // For each one
-  let newUl = $("<ul>").addClass("list-group")
+  let newUl = $("<ul>").addClass("list-group");
 
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    let newLi = $("<li>").addClass("list-group-item").attr("data-id", data[i]._id).html(data[i].title + "<br/>" + data[i].link)
-    let newButton = $("<button>").addClass("btn btn-success float-right saveArticle").text("save").attr("data-id", data[i]._id);
-    newLi.append(newButton)
+    let newLi = $("<li>")
+      .addClass("list-group-item")
+      .attr("data-id", data[i]._id)
+      .html(data[i].title + "<br/>" + data[i].link);
+    let newButton = $("<button>")
+      .addClass("btn btn-success float-right saveArticle")
+      .text("save")
+      .attr("data-id", data[i]._id);
+    newLi.append(newButton);
     newUl.append(newLi);
-
   }
   $("#articles").append(newUl);
 });
@@ -19,15 +24,15 @@ $("#clearArticles").click(() => {
   $.ajax({
     method: "GET",
     url: "/delArticles"
-  })
+  });
   $("#articles").empty();
-})
+});
 
 $(document).on("click", "#reScrape", function() {
   // Grab the id associated with the article from the submit button
   $.ajax({
     method: "GET",
-    url: "/scrape",
+    url: "/scrape"
   }).then(() => {
     // Grab the articles as a json
     $.getJSON("/articles", function(data) {
@@ -50,30 +55,33 @@ $(document).on("click", "#reScrape", function() {
       $("#articles").append(newUl);
     });
   });
-
 });
-
 
 $("#savedArticle").click(() => {
   $("#articles").empty();
   // Grab the articles as a json
-  $.getJSON("/savedArticles", function (data) {
+  $.getJSON("/savedArticles", function(data) {
     // For each one
-    let newUl = $("<ul>").addClass("list-group")
+    let newUl = $("<ul>").addClass("list-group");
 
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
-      let newLi = $("<li>").addClass("list-group-item").attr("data-id", data[i]._id).html(data[i].title + "<br/>" + data[i].link)
-      let newButton = $("<button>").addClass("btn btn-danger float-right deleteArticle").text("X").attr("data-id", data[i]._id);
-      newLi.append(newButton)
+      let newLi = $("<li>")
+        .addClass("list-group-item")
+        .attr("data-id", data[i]._id)
+        .html(data[i].title + "</br>" + data[i].link);
+      let newButton = $("<button>")
+        .addClass("btn btn-danger float-right deleteArticle")
+        .text("X")
+        .attr("data-id", data[i]._id);
+      newLi.append(newButton);
       newUl.append(newLi);
-
     }
     $("#articles").append(newUl);
-  })
+  });
 });
 
-$(document).on("click", ".saveArticle", function () {
+$(document).on("click", ".saveArticle", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
 
@@ -83,7 +91,7 @@ $(document).on("click", ".saveArticle", function () {
     url: "/articles/" + thisId
   })
     // With that done
-    .then(function (data) {
+    .then(function(data) {
       console.log(data);
       $.ajax({
         method: "POST",
@@ -92,7 +100,7 @@ $(document).on("click", ".saveArticle", function () {
           title: data.title,
           link: data.link
         }
-      })
+      });
     });
 });
 
@@ -101,8 +109,9 @@ $(document).on("click", ".deleteArticle", function() {
   var thisId = $(this).attr("data-id");
   $.ajax({
     method: "GET",
-    url: "/deleteArticle/" + thisId,
-  }).then(()=>{
+    url: "/deleteArticle/" + thisId
+  }).then(() => {
+    // Grab the articles as a json
     $("#articles").empty();
     // Grab the articles as a json
     $.getJSON("/savedArticles", function(data) {
@@ -116,7 +125,7 @@ $(document).on("click", ".deleteArticle", function() {
           .attr("data-id", data[i]._id)
           .html(data[i].title + "</br>" + data[i].link);
         let newButton = $("<button>")
-          .addClass("deleteArticle btn btn-outline-success float-right")
+          .addClass("btn btn-danger float-right deleteArticle")
           .text("X")
           .attr("data-id", data[i]._id);
         newLi.append(newButton);
@@ -124,5 +133,5 @@ $(document).on("click", ".deleteArticle", function() {
       }
       $("#articles").append(newUl);
     });
-  })
+  });
 });

@@ -1,0 +1,15 @@
+body {
+  background-color: #f2f6d0;
+}
+
+li:nth-child(2n + 1) {
+  background-color: #ef5151;
+}
+
+li:nth-child(2n) {
+  background-color: #807676;
+}
+
+#wrapper {
+width: 100%;
+}
